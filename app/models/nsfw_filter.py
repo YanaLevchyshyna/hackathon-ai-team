@@ -2,9 +2,9 @@ from PIL import Image
 from transformers import pipeline
 
 # Load the model only once when the module is imported
-classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
+#classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
 
-def is_safe_image(image_path, threshold=0.9):
+def is_safe_image(classifier, image_path, threshold=0.9):
     """
     Checks if an image is safe (i.e., not NSFW) using a pre-trained Hugging Face model.
 
