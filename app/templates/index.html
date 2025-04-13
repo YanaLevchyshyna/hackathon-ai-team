@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Завантаження зображення</title>
+</head>
+<body>
+  <h1>Завантажити зображення на сервер</h1>
+  
+  <input type="file" id="fileInput" accept="image/*">
+  <button onclick="uploadFile()">Завантажити</button>
+
+  <p id="status"></p>
+
+  <script>
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        document.getElementById('status').innerText = 'Будь ласка, оберіть файл.';
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const base64Data = event.target.result.split(',')[1]; 
+
+        fetch('/ai_api_services/check_img', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            file: base64Data,
+            filename: file.name
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('status').innerText = 'Successful' + data.message;
+          console.log(data);
+        })
+        .catch(error => {
+          document.getElementById('status').innerText = 'Failed';
+          console.error('Error:', error);
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
+

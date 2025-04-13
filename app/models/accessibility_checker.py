@@ -2,11 +2,6 @@ from PIL import Image
 import torch
 from transformers import CLIPProcessor, CLIPModel
 
-# Load model and processor once (outside the function to avoid reloading)
-model_name = "openai/clip-vit-base-patch32"
-model = CLIPModel.from_pretrained(model_name)
-processor = CLIPProcessor.from_pretrained(model_name)
-
 # Define the descriptions for accessibility comparison
 ACCESSIBILITY_LABELS_EN = [
     "a photo of a wheelchair ramp",
@@ -17,8 +12,9 @@ ACCESSIBILITY_LABELS_EN = [
     "a photo of wide doors for wheelchair access",
     "nothing related to accessibility"
 ]
+ 
 
-def check_accessibility_objects(image_path, labels=ACCESSIBILITY_LABELS_EN):
+def check_accessibility_objects(processor, model, image_path, labels=ACCESSIBILITY_LABELS_EN):
     """
     Compare an image with text descriptions of accessibility-related objects using CLIP.
 
